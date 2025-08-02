@@ -15,3 +15,7 @@ SCOPES = ['chat:read', 'chat:edit']
 # ElevelLabs Configuration
 ELEVELELABS_API_KEY = os.getenv("ELEVELELABS_API_KEY")
 ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE")
+
+# User and Channel Configuration
+USER_NAME = os.getenv("USER_NAME")
+CHANNEL_NAME = os.getenv("CHANNEL_NAME")

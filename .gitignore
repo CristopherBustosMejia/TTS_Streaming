@@ -3,6 +3,11 @@
 
 .env
 *.pyc
+*.spec
+*.exe
+/dist/
+/build/
 __pycache__/
 __.vscode/
 __.venv/
+

@@ -5,7 +5,7 @@ from twitch.twitch_chat import TwitchChat
 from tss.localtts import LocalTTS
 from tss.elevellabs import ElevenLabsTTS
 from queue import Empty
-from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE
+from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE, USER_NAME, CHANNEL_NAME
 
 authorizationCode = None
 
@@ -26,9 +26,9 @@ def main():
     twitchClient = TwitchChat(
         server='irc.chat.twitch.tv',
         port=6667,
-        nickname='crisred07',
+        nickname = USER_NAME,
         token='oauth:' + accessToken,
-        channel='crisred07',  
+        channel = CHANNEL_NAME,  
     )
     engine = getTTS()
     twitchClient.connect()

@@ -54,7 +54,8 @@ class TwitchChat:
                         try:
                             user = line.split('!', 1)[0][1:]
                             message = line.split('PRIVMSG', 1)[1].split(':', 1)[1]
-                            self.messageQueue.put((user, message))
+                            if message.startswith("!speak"):
+                                self.messageQueue.put((user, message.replace("!speak", "", 1)))
                         except Exception as e:
                             print(f"Error al parsear mensaje: {line}\n{e}")
                     else:
