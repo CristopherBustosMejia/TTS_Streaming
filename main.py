@@ -1,14 +1,16 @@
 import webbrowser
 import time
-import pyttsx3
 from auth.oauth import buildAuthorizationURL, startLocalServer, getToken
 from twitch.twitch_chat import TwitchChat
+from tss.localtts import LocalTTS
+from tss.elevellabs import ElevenLabsTTS
 from queue import Empty
-from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES
+from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE
 
 authorizationCode = None
 
 def main():
+
     authorizationCode = None
     auth_url = buildAuthorizationURL(CLIENT_ID, REDIRECT_URI, SCOPES)
     print(f"Opening authorization URL: {auth_url}")
@@ -28,19 +30,24 @@ def main():
         token='oauth:' + accessToken,
         channel='crisred07',  
     )
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 150)
-    engine.setProperty('volume', 1.0)
+    engine = getTTS()
     twitchClient.connect()
     print(f"Connected to channel: {twitchClient.channel}")
     twitchClient.startReading()
     while True:
         try:
             user, message = twitchClient.messageQueue.get(timeout=1)
-            engine.say(f"{user} say: {message}")
-            engine.runAndWait()
+            engine.speak(f"{user} say: {message}")
         except Empty:
             pass  
+
+def getTTS():
+    if TTS_ENGINE == "elevenlabs":
+        print(f"Using ElevenLabs TTS Engine")
+        return ElevenLabsTTS()
+    else:
+        print(f"Using Local TTS Engine")
+        return LocalTTS()
 
 if __name__ == "__main__":
     main()
