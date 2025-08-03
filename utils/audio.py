@@ -13,8 +13,15 @@ class AudioPlayer:
             pygame.mixer.music.load(path)
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        return
                 pygame.time.Clock().tick(10)
             pygame.mixer.music.unload()
             pygame.mixer.quit()
         except Exception as e:
             print(f"[ERROR] Error al reproducir el audio: {e}")
+    
+    def stayActive(self):
+        pygame.event.pump()

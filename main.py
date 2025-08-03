@@ -36,10 +36,11 @@ def main():
     twitchClient.startReading()
     while True:
         try:
-            user, message = twitchClient.messageQueue.get(timeout=1)
+            user, message = twitchClient.messageQueue.get(timeout=0.1)
             engine.speak(f"{user} say: {message}")
         except Empty:
             pass  
+        engine.mediaPlayer.stayActive()
 
 def getTTS():
     if TTS_ENGINE == "elevenlabs":

@@ -11,9 +11,13 @@ class ElevenLabsTTS(TTSBase):
         self.api_key = ELEVELELABS_API_KEY
         self.voice = voice
         self.mediaPlayer = AudioPlayer()
-        
     
     def speak(self, text: str):
+        text = text.strip()
+        if not text:
+            print("[TTS] Texto vacío. No se generará audio.")
+            return
+        print(f"[TTS] Generando audio para: {text}")
         url = f"https://api.elevenlabs.io/v1/text-to-speech/{self.voice}"
         headers = {
             "xi-api-key": self.api_key,
@@ -27,18 +31,23 @@ class ElevenLabsTTS(TTSBase):
             }
         }
         res = requests.post(url, json=data, headers=headers)
-        if res.status_code == 200:
+        if res.status_code != 200:
+            print(f"Error: {res.status_code} - {res.text}")
+            return
+        try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tempAudio:
                 tempAudio.write(res.content)
                 tempAudioPath = tempAudio.name
+            if os.path.getsize(tempAudioPath) == 0:
+                print("[TTS] El archivo de audio generado está vacío.")
+                return
+            self.mediaPlayer.playAudio(tempAudioPath)
+        except Exception as e:
+            print(f"[ERROR] Error playing audio: {e}")
+        finally:
             try:
-                self.mediaPlayer.playAudio(tempAudioPath)
-            except Exception as e:
-                print(f"[ERROR] Error playing audio: {e}")
-            finally:
-                try:
-                    os.unlink(tempAudioPath)
-                except OSError as e:
-                    print(f"[ERROR] Error deleting temporary audio file: {e}")
-        else:
-            print(f"Error: {res.status_code} - {res.text}")
+                os.unlink(tempAudioPath)
+            except OSError as e:
+                print(f"[ERROR] Error deleting temporary audio file: {e}")
+
+            
