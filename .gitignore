@@ -7,7 +7,7 @@
 *.exe
 /dist/
 /build/
+/.vscode/
 __pycache__/
-__.vscode/
 __.venv/
 
