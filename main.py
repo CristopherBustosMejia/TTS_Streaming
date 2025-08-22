@@ -2,7 +2,6 @@ import webbrowser
 import time
 from auth.oauth import buildAuthorizationURL, startLocalServer, getToken
 from twitch.twitch_chat import TwitchChat
-from tss.localtts import LocalTTS
 from tss.elevellabs import ElevenLabsTTS
 from queue import Empty
 from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE, USER_NAME, CHANNEL_NAME
@@ -31,6 +30,9 @@ def main():
         channel = CHANNEL_NAME,  
     )
     engine = getTTS()
+    if engine is None:
+        print("No TTS engine configured, exiting.")
+        return
     twitchClient.connect()
     print(f"Connected to channel: {twitchClient.channel}")
     twitchClient.startReading()
@@ -48,7 +50,7 @@ def getTTS():
         return ElevenLabsTTS()
     else:
         print(f"Using Local TTS Engine")
-        return LocalTTS()
+        return None
 
 if __name__ == "__main__":
     main()
