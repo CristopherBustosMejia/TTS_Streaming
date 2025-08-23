@@ -3,7 +3,7 @@ import tempfile
 import os
 import time
 from utils.audio import AudioPlayer
-from tss.base import TTSBase
+from tts.base import TTSBase
 from config import ELEVELELABS_API_KEY, ELEVENLABS_VOICE
 
 class ElevenLabsTTS(TTSBase):

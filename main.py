@@ -2,7 +2,8 @@ import webbrowser
 import time
 from auth.oauth import buildAuthorizationURL, startLocalServer, getToken
 from twitch.twitch_chat import TwitchChat
-from tss.elevellabs import ElevenLabsTTS
+from tts.elevellabs import ElevenLabsTTS
+from tts.googletts import GoogleTTS
 from queue import Empty
 from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE, USER_NAME, CHANNEL_NAME
 
@@ -48,8 +49,11 @@ def getTTS():
     if TTS_ENGINE == "elevenlabs":
         print(f"Using ElevenLabs TTS Engine")
         return ElevenLabsTTS()
+    elif TTS_ENGINE == "gtts":
+        print(f"Using gTTS Engine")
+        return GoogleTTS()
     else:
-        print(f"Using Local TTS Engine")
+        print(f"No valid TTS engine configured in .env file. Please set TTS_ENGINE")
         return None
 
 if __name__ == "__main__":
