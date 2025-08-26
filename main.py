@@ -40,7 +40,10 @@ def main():
     while True:
         try:
             user, message = twitchClient.messageQueue.get(timeout=0.1)
-            engine.speak(f"{user} say: {message}")
+            aux = engine.speak(f"{user} say: {message}")
+            if aux is not None:
+                engine = GoogleTTS()
+                engine.speak(aux)
         except Empty:
             pass  
         engine.mediaPlayer.stayActive()

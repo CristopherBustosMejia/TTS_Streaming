@@ -33,7 +33,9 @@ class ElevenLabsTTS(TTSBase):
         res = requests.post(url, json=data, headers=headers)
         if res.status_code != 200:
             print(f"Error: {res.status_code} - {res.text}")
-            return
+            if res.status_code == 401:
+                print("[TTS] El limite de tokens ha sido alcanzado, Cambiando a engine secundario.")
+            return text
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tempAudio:
                 tempAudio.write(res.content)
