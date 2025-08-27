@@ -3,6 +3,7 @@ import os
 from gtts import gTTS
 from tts.base import TTSBase
 from utils.audio import AudioPlayer
+from utils.logger import Logger
 
 class GoogleTTS(TTSBase):
     def __init__(self, lang='es'):
@@ -27,8 +28,10 @@ class GoogleTTS(TTSBase):
             self.mediaPlayer.playAudio(tempAudioPath)
         except Exception as e:
             print(f"[ERROR] Error generating or playing audio: {e}")
+            Logger.addToLog("error", f"Error generating or playing audio: {e}")
         finally:
             try:
                 os.unlink(tempAudioPath)
             except OSError as e:
                 print(f"[ERROR] Error deleting temporary audio file: {e}")
+                Logger.addToLog("error", f"Error deleting temporary audio file: {e}")

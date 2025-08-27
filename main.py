@@ -4,6 +4,7 @@ from auth.oauth import buildAuthorizationURL, startLocalServer, getToken
 from twitch.twitch_chat import TwitchChat
 from tts.elevellabs import ElevenLabsTTS
 from tts.googletts import GoogleTTS
+from utils.logger import Logger
 from queue import Empty
 from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, TTS_ENGINE, USER_NAME, CHANNEL_NAME
 
@@ -33,6 +34,7 @@ def main():
     engine = getTTS()
     if engine is None:
         print("No TTS engine configured, exiting.")
+        Logger.addToLog("error", "Error: No TTS engine configured, exiting.")
         return
     twitchClient.connect()
     print(f"Connected to channel: {twitchClient.channel}")

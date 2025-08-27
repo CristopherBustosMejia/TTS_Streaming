@@ -1,6 +1,7 @@
 import threading
 import queue
 import socket
+from utils.logger import Logger
 
 class TwitchChat:
     server: str
@@ -58,10 +59,12 @@ class TwitchChat:
                                 self.messageQueue.put((user, message.replace("!speak", "", 1)))
                         except Exception as e:
                             print(f"Error al parsear mensaje: {line}\n{e}")
+                            Logger.addToLog("error", f"Error parsing message: {line} - {e}")
                     else:
                         print(f"[DEBUG] {line.strip()}")
             except Exception as e:
                 print(f"[ERROR] {e}")
+                Logger.addToLog("error", f"Error in readMessages: {e}")
     
     def sendMessage(self, message: str):
         self.sock.send(f"PRIVMSG {self.channel} :{message}\r\n".encode('utf-8'))

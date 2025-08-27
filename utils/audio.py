@@ -1,5 +1,6 @@
 import pygame
 import time
+from utils.logger import Logger
 
 class AudioPlayer:
     def __init__(self):
@@ -22,6 +23,7 @@ class AudioPlayer:
             pygame.mixer.quit()
         except Exception as e:
             print(f"[ERROR] Error al reproducir el audio: {e}")
+            Logger.addToLog("error", f"Error playing audio: {e}")
     
     def stayActive(self):
         pygame.event.pump()

@@ -4,6 +4,7 @@ import os
 import time
 from utils.audio import AudioPlayer
 from tts.base import TTSBase
+from utils.logger import Logger
 from config import ELEVELELABS_API_KEY, ELEVENLABS_VOICE
 
 class ElevenLabsTTS(TTSBase):
@@ -46,10 +47,10 @@ class ElevenLabsTTS(TTSBase):
             self.mediaPlayer.playAudio(tempAudioPath)
         except Exception as e:
             print(f"[ERROR] Error playing audio: {e}")
+            Logger.addToLog("error", f"Error playing audio: {e}")
         finally:
             try:
                 os.unlink(tempAudioPath)
             except OSError as e:
                 print(f"[ERROR] Error deleting temporary audio file: {e}")
-
-            
+                Logger.addToLog("error", f"Error deleting temporary audio file: {e}")
