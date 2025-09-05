@@ -33,8 +33,8 @@ class Logger():
                 logger.error(message)
             elif (level == "info"):
                 logger.info(message)
-            elif (level == "warn"):
-                logger.warn(message)
+            elif (level == "warning"):
+                logger.warning(message)
         except Exception as ex:
             print(traceback.format_exc())
             print(ex)

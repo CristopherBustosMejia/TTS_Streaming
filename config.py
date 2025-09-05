@@ -16,6 +16,9 @@ SCOPES = ['chat:read', 'chat:edit']
 ELEVELELABS_API_KEY = os.getenv("ELEVELELABS_API_KEY")
 ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE")
 
-# User and Channel Configuration
+# User and Channel Configuration for Twitch
 USER_NAME = os.getenv("USER_NAME")
 CHANNEL_NAME = os.getenv("CHANNEL_NAME")
+
+# User and Channel Configuration for TikTok
+TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")

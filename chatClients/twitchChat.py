@@ -1,9 +1,10 @@
 import threading
 import queue
 import socket
+from chatClients.base import ClientBase
 from utils.logger import Logger
 
-class TwitchChat:
+class TwitchChat(ClientBase):
     server: str
     port: int
     nickname: str
@@ -50,7 +51,7 @@ class TwitchChat:
                 for line in lines:
                     if line.startswith("PING"):
                         self.sock.send("PONG :tmi.twitch.tv\r\n".encode('utf-8'))
-                        print("PING recibido, PONG enviado")
+                        print("[TwitchChat] PING recibido, PONG enviado")
                     elif "PRIVMSG" in line:
                         try:
                             user = line.split('!', 1)[0][1:]
@@ -58,12 +59,12 @@ class TwitchChat:
                             if message.startswith("!speak"):
                                 self.messageQueue.put((user, message.replace("!speak", "", 1)))
                         except Exception as e:
-                            print(f"Error al parsear mensaje: {line}\n{e}")
+                            print(f"[TwitchChat] Error al parsear mensaje: {line}\n{e}")
                             Logger.addToLog("error", f"Error parsing message: {line} - {e}")
                     else:
-                        print(f"[DEBUG] {line.strip()}")
+                        print(f"[TwitchChat] {line.strip()}")
             except Exception as e:
-                print(f"[ERROR] {e}")
+                print(f"[TwitchChat - Error] {e}")
                 Logger.addToLog("error", f"Error in readMessages: {e}")
     
     def sendMessage(self, message: str):
