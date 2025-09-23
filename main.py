@@ -73,6 +73,8 @@ def main():
 def processMessage(engine, user, message, platform):
     if platform is "Twitch":
         engine = getTTS()
+        if message is None or message.strip() == "":
+            return
         aux = engine.speak(f"[{platform}] {user} says: {message}")
         if aux is -1:
             engine = GoogleTTS()

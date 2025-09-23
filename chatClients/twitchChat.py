@@ -24,6 +24,15 @@ class TwitchChat(ClientBase):
         self.sock = socket.socket()
         self.messageQueue = queue.Queue()
         self.stopEvent = threading.Event()
+        self.commands ={
+            "!speak": self.queueMessage("!speak"),
+            "!say": self.queueMessage("!say"),
+            "!talk": self.queueMessage("!talk"),
+            "!dice": self.queueMessage("!dice"),
+            "!id": self.sendNickname(),
+            "!nick": self.sendNickname(),
+            "!username": self.sendNickname(),
+        }
     
     def connect(self):
         self.sock.connect((self.server, self.port))
@@ -56,8 +65,10 @@ class TwitchChat(ClientBase):
                         try:
                             user = line.split('!', 1)[0][1:]
                             message = line.split('PRIVMSG', 1)[1].split(':', 1)[1]
-                            if message.startswith("!speak"):
-                                self.messageQueue.put((user, message.replace("!speak", "", 1)))
+                            for cmd, action in self.commands.items():
+                                if message.startswith(cmd):
+                                    action(user, message)
+                                    break
                         except Exception as e:
                             print(f"[TwitchChat] Error al parsear mensaje: {line}\n{e}")
                             Logger.addToLog("error", f"Error parsing message: {line} - {e}")
@@ -69,3 +80,9 @@ class TwitchChat(ClientBase):
     
     def sendMessage(self, message: str):
         self.sock.send(f"PRIVMSG {self.channel} :{message}\r\n".encode('utf-8'))
+    
+    def queueMessage(self, cmd):
+        return lambda u, m: self.messageQueue.put((u, m[len(cmd):].strip()))
+    
+    def sendNickname(self, cmd=None):
+        return lambda u, m: self.sendMessage(f"@{u}, Fortnite ID: Ammi_Wang - Roblox ID: awa457456")
