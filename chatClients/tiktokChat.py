@@ -11,6 +11,12 @@ class TikTokChat():
         self.client = TikTokLiveClient(unique_id=username)
         self.message_queue = queue.Queue()
         self.thread = None
+        self.commands = {
+            "!speak": self.queueMessage("!speak"),
+            "!say": self.queueMessage("!say"),
+            "!talk": self.queueMessage("!talk"),
+            "!dice": self.queueMessage("!dice")
+        }
 
         @self.client.on(ConnectEvent)
         async def on_connect(event: ConnectEvent):
@@ -21,8 +27,10 @@ class TikTokChat():
             try:
                 user = event.user.nickname
                 message = event.comment
-                if message.startswith("!speak"):
-                    self.message_queue.put((user, message.replace("!speak", "", 1)))
+                for cmd, action in self.commands.items():
+                    if message.startswith(cmd):
+                        action(user, message)
+                        break
             except Exception as e:
                 Logger.addToLog("error",f"Error processing comment: {e}")
 
@@ -40,3 +48,6 @@ class TikTokChat():
 
     def getMessageQueue(self):
         return self.message_queue
+    
+    def queueMessage(self, cmd):
+        return lambda u, m: self.messageQueue.put((u, m[len(cmd):].strip()))

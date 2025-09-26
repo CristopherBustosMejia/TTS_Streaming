@@ -7,7 +7,7 @@ from tts.elevellabs import ElevenLabsTTS
 from tts.googletts import GoogleTTS
 from utils.logger import Logger
 from queue import Empty
-from config import TTS_ENGINE, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, USER_NAME, CHANNEL_NAME, TIKTOK_USERNAME
+from config import TTS_ENGINE, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES, USER_NAME, CHANNEL_NAME, SOURCE_ROOM_ID , TIKTOK_USERNAME
 
 def main():
     engine = getTTS()
@@ -39,7 +39,8 @@ def main():
             port=6667,
             nickname = USER_NAME,
             token='oauth:' + accessToken,
-            channel = CHANNEL_NAME,  
+            channel = CHANNEL_NAME,
+            sourceRoom = SOURCE_ROOM_ID
         )
         twitchClient.connect()
         print(f"Connected to Twitch chat as {USER_NAME} in channel {CHANNEL_NAME}")
@@ -71,16 +72,16 @@ def main():
         engine.mediaPlayer.stayActive()
 
 def processMessage(engine, user, message, platform):
-    if platform is "Twitch":
+    if platform == "Twitch":
         engine = getTTS()
         if message is None or message.strip() == "":
             return
         aux = engine.speak(f"[{platform}] {user} says: {message}")
-        if aux is -1:
+        if aux == -1:
             engine = GoogleTTS()
             Logger.addToLog("info", "Switching to gTTS due to an error with ElevenLabs.")
             engine.speak(f"[{platform}] {user} says: {message}")
-    elif platform is "TikTok":
+    elif platform == "TikTok":
         engine = GoogleTTS()
         engine.speak(f"[{platform}] {user} says: {message}")
 

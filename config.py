@@ -5,6 +5,7 @@ load_dotenv()
 
 # config.py
 TTS_ENGINE = os.getenv("TTS_ENGINE")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
 # Twitch API Configuration
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -19,6 +20,7 @@ ELEVENLABS_VOICE = os.getenv("ELEVENLABS_VOICE")
 # User and Channel Configuration for Twitch
 USER_NAME = os.getenv("USER_NAME")
 CHANNEL_NAME = os.getenv("CHANNEL_NAME")
+SOURCE_ROOM_ID = os.getenv("SOURCE_ROOM_ID")
 
 # User and Channel Configuration for TikTok
 TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")

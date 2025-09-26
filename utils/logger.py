@@ -1,13 +1,13 @@
 import logging
 import os
 import traceback
+from config import DEBUG
 
 class Logger():
 
     def setLogger(self):
         logDirectory = "logs"
-        logFilename = "app.log"
-
+        logFilename = "debug.log" if DEBUG else "app.log"
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
         logPath = os.path.join(logDirectory, logFilename)
