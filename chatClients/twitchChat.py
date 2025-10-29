@@ -72,7 +72,7 @@ class TwitchChat(ClientBase):
                             prefix, rest = line.split(" PRIVMSG ", 1)
                             user = prefix.split('!', 1)[0][1:]
                             message = rest.split(':', 1)[1].strip()
-                            print(f"\033[1;36m[Twitch]\033[0m {user}: {message}\033[0m")
+                            print(f"\033[1;35m[Twitch]\033[1;37m {user}:\033[0m {message}")
                             for cmd, action in self.commands.items():
                                 if message.startswith(cmd):
                                     action(user, message)

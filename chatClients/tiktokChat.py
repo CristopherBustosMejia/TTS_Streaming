@@ -27,7 +27,7 @@ class TikTokChat():
             try:
                 user = event.user.nickname
                 message = event.comment
-                print(f"\033[1;31m[TikTok]\033[0m {user}: {message}")
+                print(f"\033[1;32m[TikTok]\033[1;37m {user}:\033[0m {message}")
             except Exception as e:
                 Logger.addToLog("error",f"Error processing comment: {e}")
 
@@ -36,7 +36,7 @@ class TikTokChat():
             try:
                 self.client.run()
             except Exception as e:
-                Logger.error(f"Error starting TikTok client: {e}")
+                Logger.addToLog("error",f"Error starting TikTok client: {e}")
         self.thread = threading.Thread(target=runner, daemon=True)
         self.thread.start()
     
