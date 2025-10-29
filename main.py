@@ -24,16 +24,13 @@ def main():
     if activeTwitchChat:
         authorizationCode = None
         authUrl = buildAuthorizationURL(CLIENT_ID, REDIRECT_URI, SCOPES)
-        print(f"Opening authorization URL: {authUrl}")
         webbrowser.open(authUrl)
         server = startLocalServer()
         while not hasattr(server, 'authorizationCode'):
             time.sleep(1)
         authorizationCode = server.authorizationCode
-        print(f"Authorization code received: {authorizationCode}")
         tokeInfo = getToken(CLIENT_ID, CLIENT_SECRET, authorizationCode, REDIRECT_URI)
         accessToken = tokeInfo.get('access_token')
-        print(f"Access Token: {accessToken}")
         twitchClient = TwitchChat(
             server='irc.chat.twitch.tv',
             port=6667,
@@ -87,13 +84,10 @@ def processMessage(engine, user, message, platform):
 
 def getTTS():
     if TTS_ENGINE == "elevenlabs":
-        print(f"Using ElevenLabs TTS Engine")
         return ElevenLabsTTS()
     elif TTS_ENGINE == "gtts":
-        print(f"Using gTTS Engine")
         return GoogleTTS()
     else:
-        print(f"No valid TTS engine configured in .env file. Please set TTS_ENGINE")
         return None
         
 def verifyConfigTwitch():

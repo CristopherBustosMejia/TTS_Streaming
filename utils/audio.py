@@ -22,7 +22,6 @@ class AudioPlayer:
             pygame.mixer.music.unload()
             pygame.mixer.quit()
         except Exception as e:
-            print(f"[Audio - Error] Error al reproducir el audio: {e}")
             Logger.addToLog("error", f"Error playing audio: {e}")
     
     def stayActive(self):

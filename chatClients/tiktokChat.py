@@ -27,10 +27,7 @@ class TikTokChat():
             try:
                 user = event.user.nickname
                 message = event.comment
-                for cmd, action in self.commands.items():
-                    if message.startswith(cmd):
-                        action(user, message)
-                        break
+                print(f"\033[1;31m[TikTok]\033[0m {user}: {message}")
             except Exception as e:
                 Logger.addToLog("error",f"Error processing comment: {e}")
 

@@ -33,11 +33,9 @@ def buildAuthorizationURL(clientID: str, redirectURI: str, scopes: list[str]) ->
 def startLocalServer(port: int = 8765):
     server_address = ('', port)
     httpd = HTTPServer(server_address, OAuthHandler)
-    print(f"Starting local server on port {port}...")
     thread = threading.Thread(target=httpd.serve_forever)
     thread.daemon = True
     thread.start()
-    print(f"Local server listening on port {port}...")
     return httpd
 
 def getToken(clientID: str, clientSecret: str, code: str, redirectURI: str) -> dict:

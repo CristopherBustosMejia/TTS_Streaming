@@ -65,7 +65,6 @@ class TwitchChat(ClientBase):
                         print("[TwitchChat] PING recibido, PONG enviado")
                     elif "PRIVMSG" in line:
                         if not self.verifySourceRoom(line):
-                            print(f"[TwitchChat] Ignored message for invalid source room")
                             continue
                         try:
                             if line.startswith("@"):
@@ -73,17 +72,16 @@ class TwitchChat(ClientBase):
                             prefix, rest = line.split(" PRIVMSG ", 1)
                             user = prefix.split('!', 1)[0][1:]
                             message = rest.split(':', 1)[1].strip()
+                            print(f"\033[1;36m[Twitch]\033[0m {user}: {message}\033[0m")
                             for cmd, action in self.commands.items():
                                 if message.startswith(cmd):
                                     action(user, message)
                                     break
                         except Exception as e:
-                            print(f"[TwitchChat] Error al parsear mensaje: {line}\n{e}")
                             Logger.addToLog("error", f"Error parsing message: {line} - {e}")
                     else:
-                        print(f"[TwitchChat] {line.strip()}")
+                        print(f"{line.strip()}")
             except Exception as e:
-                print(f"[TwitchChat - Error] {e}")
                 Logger.addToLog("error", f"Error in readMessages: {e}")
     
     def sendMessage(self, message: str):

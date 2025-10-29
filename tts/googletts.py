@@ -14,24 +14,19 @@ class GoogleTTS(TTSBase):
     def speak(self, text):
         text = text.strip()
         if not text:
-            print("[TTS - gTTS] Texto vacío. No se generará audio.")
             return
-        print(f"[TTS - gTTS] Generando audio para: {text}")
         try:
             tts = self.tts(text, lang=self.lang)
             with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tempAudio:
                 tts.save(tempAudio.name)
                 tempAudioPath = tempAudio.name
             if os.path.getsize(tempAudioPath) == 0:
-                print("[TTS - gTTS] El archivo de audio generado está vacío.")
                 return
             self.mediaPlayer.playAudio(tempAudioPath)
         except Exception as e:
-            print(f"[TTS - gTTs - Error] Error generating or playing audio: {e}")
             Logger.addToLog("error", f"Error generating or playing audio: {e}")
         finally:
             try:
                 os.unlink(tempAudioPath)
             except OSError as e:
-                print(f"[TTS - gTTS - ERROR] Error deleting temporary audio file: {e}")
                 Logger.addToLog("error", f"Error deleting temporary audio file: {e}")

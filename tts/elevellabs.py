@@ -16,9 +16,7 @@ class ElevenLabsTTS(TTSBase):
     def speak(self, text: str):
         text = text.strip()
         if not text:
-            print("[TTS - ElevenLabs] Texto vacío. No se generará audio.")
             return
-        print(f"[TTS] Generando audio para: {text}")
         url = f"https://api.elevenlabs.io/v1/text-to-speech/{self.voice}"
         headers = {
             "xi-api-key": self.api_key,
@@ -33,24 +31,20 @@ class ElevenLabsTTS(TTSBase):
         }
         res = requests.post(url, json=data, headers=headers)
         if res.status_code != 200:
-            print(f"Error: {res.status_code} - {res.text}")
             if res.status_code == 401:
-                print("[TTS - ElevenLabs] El limite de tokens ha sido alcanzado, Cambiando a engine secundario.")
+                Logger.addToLog("warning","[TTS - ElevenLabs] El limite de tokens ha sido alcanzado, Cambiando a engine secundario.")
             return -1
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as tempAudio:
                 tempAudio.write(res.content)
                 tempAudioPath = tempAudio.name
             if os.path.getsize(tempAudioPath) == 0:
-                print("[TTS - ElevenLabs] El archivo de audio generado está vacío.")
                 return
             self.mediaPlayer.playAudio(tempAudioPath)
         except Exception as e:
-            print(f"[TTS - ElevenLabs - Error] Error playing audio: {e}")
             Logger.addToLog("error", f"Error playing audio: {e}")
         finally:
             try:
                 os.unlink(tempAudioPath)
             except OSError as e:
-                print(f"[ERROR] Error deleting temporary audio file: {e}")
                 Logger.addToLog("error", f"Error deleting temporary audio file: {e}")
