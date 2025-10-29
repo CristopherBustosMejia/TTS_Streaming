@@ -9,7 +9,8 @@ class Logger():
         logDirectory = "logs"
         logFilename = "debug.log" if DEBUG else "app.log"
         logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+        level = logging.DEBUG if DEBUG else logging.INFO
+        logger.setLevel(level)
         logPath = os.path.join(logDirectory, logFilename)
         fileHandler = logging.FileHandler(logPath, encoding='utf-8')
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
