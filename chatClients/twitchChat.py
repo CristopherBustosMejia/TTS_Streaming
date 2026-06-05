@@ -74,12 +74,9 @@ class TwitchChat(ClientBase):
                             user = prefix.split('!', 1)[0][1:]
                             message = rest.split(':', 1)[1].strip()
                             print(f"\033[1;35m[Twitch]\033[1;37m {user}:\033[0m {message}")
-                            for cmd, action in self.commands.items():
-                                if message.startswith(cmd):
-                                    action(user, message)
-                                    break
-                            if Traductor.detectLang(message) != "es":
-                                self.sendTraduction(user,message)
+                            if not self.verifyAction(user,message):
+                                if Traductor.detectLang(message) != "es":
+                                    self.sendTraduction(user,message)
                         except Exception as e:
                             Logger.addToLog("error", f"Error parsing message: {line} - {e}")
                     else:
@@ -100,12 +97,19 @@ class TwitchChat(ClientBase):
                 return v == self.sourceRoom
         return True
     
+    def verifyAction(self, user, message):
+        for cmd, action in self.commands.items():
+            if message.startswith(cmd):
+                action(user, message)
+                return True
+        return False
+    
     def queueMessage(self, cmd):
         return lambda u, m: self.messageQueue.put((u, m[len(cmd):].strip()))
     
     def sendNickname(self, cmd=None):
         return lambda u, m: self.sendMessage(f"@{u}, Fortnite ID: Ammi_Wang - Roblox ID: awa457456")
     
-    def sendTraduction(user,message,self):
+    def sendTraduction(self,user,message):
         traduction = Traductor.translate(message)
         return self.sendMessage(f"@{user}, Traduccion [{traduction[0]}→es]: {traduction[1]}")
