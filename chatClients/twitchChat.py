@@ -3,6 +3,7 @@ import queue
 import socket
 from chatClients.base import ClientBase
 from utils.logger import Logger
+from utils.traductor import Traductor
 
 class TwitchChat(ClientBase):
     server: str
@@ -32,7 +33,7 @@ class TwitchChat(ClientBase):
             "!dice": self.queueMessage("!dice"),
             "!id": self.sendNickname(),
             "!nick": self.sendNickname(),
-            "!username": self.sendNickname(),
+            "!username": self.sendNickname()
         }
     
     def connect(self):
@@ -77,6 +78,8 @@ class TwitchChat(ClientBase):
                                 if message.startswith(cmd):
                                     action(user, message)
                                     break
+                            if Traductor.detectLang(message) != "es":
+                                self.sendTraduction(user,message)
                         except Exception as e:
                             Logger.addToLog("error", f"Error parsing message: {line} - {e}")
                     else:
@@ -102,3 +105,7 @@ class TwitchChat(ClientBase):
     
     def sendNickname(self, cmd=None):
         return lambda u, m: self.sendMessage(f"@{u}, Fortnite ID: Ammi_Wang - Roblox ID: awa457456")
+    
+    def sendTraduction(user,message,self):
+        traduction = Traductor.translate(message)
+        return self.sendMessage(f"@{user}, Traduccion [{traduction[0]}→es]: {traduction[1]}")
